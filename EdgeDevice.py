@@ -1,6 +1,8 @@
 
-
+import time
+from threading import Thread
 from paho.mqtt import client as mqtt
+
 
 clientId = "fc-edge"
 broker = 'broker.hivemq.com'
@@ -8,33 +10,40 @@ topic1 = "/traffic/lane1"
 topic2= "/traffic/lane2"
 port = 1883
 
-
-
-
 def connect():
-    def on_connect(client,userdata, flags, rc):
+    def onConnect(client,userdata, flags, rc):
         if rc == 0:
             print("Success")
         else:
             print("Fail ", rc)
 
     client = mqtt.Client(clientId)
-    client.on_connect = on_connect
+    client.on_connect = onConnect
     client.connect(broker, port)
     return client
 
+latestSensorData = []
+def calcTrafficIntesity():
+    while True:
+        time.sleep(10)
+        avg = sum(latestSensorData) / len(latestSensorData)
+        print("The list contains " + str(latestSensorData)[1:-1] +" and the average is "+ str(avg))
+        latestSensorData.clear()
 
 
 def subscribe(client: mqtt):
-    def on_message(client, userdata, msg):
+    def onMessage(client, userdata, msg):
+        latestSensorData.append(int(msg.payload.decode()))
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
 
     client.subscribe(topic1)
     client.subscribe(topic2)
-    client.on_message = on_message
+    client.on_message = onMessage
 
 
 def run():
+    thread = Thread(target = calcTrafficIntesity)
+    thread.start()
     client = connect()
     subscribe(client)
     client.loop_forever()
