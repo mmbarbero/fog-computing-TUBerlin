@@ -12,11 +12,11 @@ port = 1883
 def generateData(args):
     args = args.upper()
     if (args == "HIGH"):
-       return random.randint(15,20)
+       return random.randint(11,15)
     elif (args == "MED"):
-       return random.randint(10,15)
+       return random.randint(6,10)
     elif(args == "LOW"):
-       return random.randint(0,10)
+       return random.randint(0,5)
 
 def connect():
     def onConnect(client,userdata, flags, rc):
