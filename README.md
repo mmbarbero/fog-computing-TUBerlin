@@ -29,12 +29,14 @@ python3 EdgeDevice.py
 **4. Cloud Server**
 
 *For Testing Putposes*
+<br />
 Your local machine coulc mimic cloud instance. You can run this file locally for tests.
 ```
 python3 CloudServer.py
 ```
 
 *For actual implementation on Cloud (AWS)*
+<br />
 4.1. Inside EdgeDevice.py file on your local machine, make sure to update the IP pointing to public IP of your AWS EC2 instance.
 ```
 AWS_INSTANCE = "tcp://<YOUR PUBLIC IP ADDRESS>:5555"
