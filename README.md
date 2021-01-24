@@ -23,8 +23,8 @@ python3 EdgeDevice.py
 ```
 - This device is subscribed to both sensor's topics on the MQTT broker. It recieves the data as soon as it connects to the broker.
 - One of the functions grabs the data and calculates a basic average of the cars that passed in a certain period of time. 
-- At the same we are connected to an AWS server using a basic ZeroMQ REQ/RES mode. I used a thread to run this on top of the MQTT subscriptions. Every 10 seconds it calculates the average of cars that passed in that time and sends it to the AWS server, and awaits for a response until it can send more.
-- If the AWS server goes down, it keeps collecting sensor data and then sends the average once it comes back online. (We need to work on this, make it more reliable)
+- At the same we are connected to an AWS server using a basic ZeroMQ REQ/RES mode. A thread is used to run this on top of the MQTT subscriptions. Every 10 seconds it calculates the average of cars that were passed in that time and sends it to the AWS server, and awaits for a response until it can send more.
+- If the AWS server goes down, it keeps collecting sensor data and then sends the average once it comes back online.
 
 **4. Cloud Server**
 
@@ -45,7 +45,7 @@ AWS_INSTANCE = "tcp://<YOUR PUBLIC IP ADDRESS>:5555"
 ```
 5555	TCP	0.0.0.0/0	launch-wizard-1-SecurityGroup
 ```
-4.3. Now run the script.
+4.3. Now run the script inside your EC2 instance.
 ```
 python3 CloudServer.py
 ```
