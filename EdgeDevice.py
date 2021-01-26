@@ -33,7 +33,7 @@ def connect():
 
 latestSensorData1 = []
 latestSensorData2 = []
-def calcTrafficIntesity():
+def calcTrafficAverage():
     if (len(latestSensorData1) != 0):
         avg1 = sum(latestSensorData1) / len(latestSensorData1)
         print("The list contains " + str(latestSensorData1)[1:-1] +" and the average is "+ str(avg1))
@@ -53,7 +53,7 @@ def calcTrafficIntesity():
 def sendDataToCloud():
     while True:
         time.sleep(10)
-        socket.send(calcTrafficIntesity().encode())
+        socket.send(calcTrafficAverage().encode())
         cloudResponse = socket.recv()
         print(cloudResponse.decode())
 
