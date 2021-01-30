@@ -19,6 +19,7 @@ context = zmq.Context()
 socket = context.socket(zmq.REQ)
 socket.connect(AWS_INSTANCE)
 
+## Connects to MQTT broker
 def connect():
     def onConnect(client,userdata, flags, rc):
         if rc == 0:
@@ -31,9 +32,11 @@ def connect():
     client.connect(broker, port)
     return client
 
+
+## The sensor data is stored temporarily to make the calculations, since we don't need to keep past records of this data in our specific use case.
 latestSensorData1 = []
 latestSensorData2 = []
-def calcTrafficIntesity():
+def calcTrafficAverage():
     if (len(latestSensorData1) != 0):
         avg1 = sum(latestSensorData1) / len(latestSensorData1)
         print("The list contains " + str(latestSensorData1)[1:-1] +" and the average is "+ str(avg1))
@@ -50,13 +53,15 @@ def calcTrafficIntesity():
 
     return cloudMsg  
 
+## The ZeroMQ connection is made to the AWS instance
 def sendDataToCloud():
     while True:
-        time.sleep(10)
-        socket.send(calcTrafficIntesity().encode())
+        time.sleep(20)
+        socket.send(calcTrafficAverage().encode())
         cloudResponse = socket.recv()
         print(cloudResponse.decode())
 
+## We subscribe to the MQTT topics, and every message we get it gets added to the lists. 
 def subscribe(client: mqtt):
     def onMessage(client, userdata, msg):
         if (topic1 == msg.topic):
@@ -69,7 +74,7 @@ def subscribe(client: mqtt):
     client.subscribe(topic2)
     client.on_message = onMessage
 
-
+## We run the average calculation and ZeroMQ data transfer on a thread in order to keep recienving the sensor data if the connection to cloud is down.
 def run():
     thread = Thread(target = sendDataToCloud)
     thread.start()
