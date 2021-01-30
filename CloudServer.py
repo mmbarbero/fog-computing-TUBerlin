@@ -10,9 +10,9 @@ def setStoplightPriority(avg):
 	lane2 = float(avg.split(",")[1])
 	reply = ""
 	if (lane1 > lane2):
-		reply = "Prioritize lane 1"
+		reply = "lane 1"
 	elif (lane1 < lane2):
-		reply = "Prioritize lane 2"
+		reply = "lane 2"
 	else:
 		reply = "Equal priority"
 
@@ -22,9 +22,8 @@ while True:
 	try:
 		message = socket.recv().decode()
 		priority = setStoplightPriority(message)
-		print("Priority is: " + priority)
+		print("Traffic is higher at " + priority + " so prioritize " + priority)
 		socket.send(priority.encode())
 	except:
 		print("FAIL")
 	time.sleep(1)
-
