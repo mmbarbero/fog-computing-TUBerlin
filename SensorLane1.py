@@ -20,6 +20,7 @@ def generateData(args):
        return random.randint(0,5)
 
 ## Makes the connection to the MQTT broker
+def connect():
     def onConnect(client,userdata, flags, rc):
         if rc == 0:
             print("Success")
