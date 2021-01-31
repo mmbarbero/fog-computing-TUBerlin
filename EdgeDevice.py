@@ -59,7 +59,7 @@ def sendDataToCloud():
         time.sleep(20)
         socket.send(calcTrafficAverage().encode())
         cloudResponse = socket.recv()
-        print(cloudResponse.decode())
+        print("Prioritize " + cloudResponse.decode())
 
 ## We subscribe to the MQTT topics, and every message we get it gets added to the lists. 
 def subscribe(client: mqtt):
