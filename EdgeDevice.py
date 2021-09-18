@@ -61,7 +61,7 @@ def sendDataToCloud():
         cloudResponse = socket.recv()
         print("Prioritize " + cloudResponse.decode())
 
-## We subscribe to the MQTT topics, and every message we get it gets added to the lists. 
+## * We subscribe to the MQTT topics, and every message we get it gets added to the lists. 
 def subscribe(client: mqtt):
     def onMessage(client, userdata, msg):
         if (topic1 == msg.topic):
@@ -70,6 +70,29 @@ def subscribe(client: mqtt):
             latestSensorData2.append(int(msg.payload.decode()))
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
 
+# Above mentioned block (*) of appending each buffered message could be better implemented by introducing a queue for appending the live buffered data.
+# We can later pop out (read- buffer) the content from it based upon requirement. This will ensure preserving of data for later transmission in queues,
+# especially helpful in partitioned system. 
+#
+#        topic_q1 = Queue()
+#        topic_q2 = Queue()
+#        topic1 = "/traffic/lane1"
+#        topic2= "/traffic/lane2"
+#        
+#def subscribe(client: mqtt):
+#    def on_message(client, userdata, message):
+#        if (topic1 == message.topic):
+#            while not topic_q1.empty():
+#                message = topic_q1.get()
+#                if message is None:
+#                continue
+#        if (topic2 == message.topic):
+#            while not topic_q2.empty():
+#                message = topic_q2.get()
+#                if message is None:
+#                continue
+#        print(f"Received `{msg.payload.decode()}` from `{message.topic}` topic")
+        
     client.subscribe(topic1)
     client.subscribe(topic2)
     client.on_message = onMessage
