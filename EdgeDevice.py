@@ -74,13 +74,11 @@ def subscribe(client: mqtt):
 # We can later pop out (read- buffer) the content from it based upon requirement. This will ensure preserving of data for later transmission in queues,
 # especially helpful in partitioned system. 
 #
+# Remove arrays in existing doc viz. latestSensorData1 and latestSensorData2 and introduce queues.
+#
 #        topic_q1 = Queue()
 #        topic_q2 = Queue()
-#        topic1 = "/traffic/lane1"
-#        topic2= "/traffic/lane2"
-#        
-#def subscribe(client: mqtt):
-#    def on_message(client, userdata, message):
+#
 #        if (topic1 == message.topic):
 #            while not topic_q1.empty():
 #                message = topic_q1.get()
@@ -91,8 +89,14 @@ def subscribe(client: mqtt):
 #                message = topic_q2.get()
 #                if message is None:
 #                continue
-#        print(f"Received `{msg.payload.decode()}` from `{message.topic}` topic")
-        
+#         print(f"Received `{msg.payload.decode()}` from `{message.topic}` topic")
+#
+# def subscribe(client: mqtt):
+#     def on_message(client, userdata, message):
+#             topic_q1.put(message)
+#             topic_q2.put(message)
+
+    
     client.subscribe(topic1)
     client.subscribe(topic2)
     client.on_message = onMessage
